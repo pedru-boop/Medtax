@@ -172,6 +172,12 @@ table.ledger,table.br{width:100%;border-collapse:collapse}
 }
 
 /* share card (rendered off-screen for image) */
+.shot{position:fixed;inset:0;z-index:50;background:rgba(10,20,35,.88);display:flex;flex-direction:column;align-items:center;padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);gap:10px}
+.shot p{margin:0;color:#fff;text-align:center;font-size:16px;line-height:1.5}
+.shot .imgwrap{flex:1;min-height:0;width:100%;overflow:auto;display:flex;justify-content:center;-webkit-overflow-scrolling:touch}
+.shot img{width:100%;max-width:520px;height:auto;align-self:flex-start;border-radius:10px;-webkit-touch-callout:default;user-select:auto}
+.shot .row-btn{margin:0;justify-content:center}
+.shot a{text-decoration:none}
 .share-card{position:fixed;left:-12000px;top:0;background:var(--bg);padding:14px;font-family:var(--font);color:var(--ink)}
 .share-card .shead{display:flex;justify-content:space-between;gap:12px;background:#fff;border-radius:12px;border:1px solid var(--line);padding:12px;margin-bottom:12px}
 .share-card .shead h2{margin:0 0 2px;font-size:19px}
@@ -556,28 +562,9 @@ table.gu2{border-collapse:collapse;min-width:100%}
     <div class="sec2" id="brSec">
       <h3>อัตราภาษีก้าวหน้าแบบขั้นบันได</h3>
       <div class="brtoggle" id="brToggle"></div>
-      <div class="drawbar no-share" id="drawBar">
-        <button type="button" id="penBtn" aria-pressed="false">✏️ ขีดเขียน</button>
-        <span class="tools">
-          <button type="button" class="dot" data-c="#E53935" style="background:#E53935" aria-label="ปากกาสีแดง"></button>
-          <button type="button" class="dot" data-c="#1F6FD1" style="background:#1F6FD1" aria-label="ปากกาสีน้ำเงิน"></button>
-          <button type="button" class="dot" data-c="#2E7D0F" style="background:#2E7D0F" aria-label="ปากกาสีเขียว"></button>
-          <button type="button" class="dot" data-c="hl" style="background:#FFD54F" aria-label="ปากกาเน้นข้อความสีเหลือง"></button>
-          <button type="button" id="eraserBtn" aria-pressed="false">ยางลบ</button>
-          <button type="button" id="undoBtn">ย้อน</button>
-          <button type="button" id="clearBtn">ล้าง</button>
-        </span>
-      </div>
-      <div class="penhint no-share">ขณะขีดเขียน หน้าจอตรงตารางจะเลื่อนไม่ได้ แตะ "เลิกขีดเขียน" เพื่อเลื่อนต่อ · รอยขีดไม่ติดในรูปที่บันทึก</div>
       <div class="br-draw" id="brDraw">
         <div class="br-wrap"><table class="br" id="brTable"></table></div>
-        <div class="trialrow no-share">
-          <label for="trialAmt">ทดลองลดหย่อนเพิ่ม</label>
-          <input class="inp money" id="trialAmt" inputmode="numeric" placeholder="บาท">
-        </div>
-        <div class="trialout no-share" id="trialOut" style="display:none"></div>
         <div class="brtip" id="brTip"></div>
-        <canvas class="no-share" id="brCanvas" aria-hidden="true"></canvas>
       </div>
     </div>
 
@@ -1597,27 +1584,7 @@ function fillRoi(s){
     cols.appendChild(b);
   });
 }
-/* ===== v2.7 ทดลองงบลดหย่อนเพิ่ม (คิดจากคอลัมน์ปัจจุบัน ไม่ติดในรูป LINE) ===== */
-function trialCalc(s){
-  var amt = num(st.trial); if (!(amt > 0)) return null;
-  var cap = extraPay(s.dFcap, s.dB), use = Math.min(amt, cap);
-  var dT = allocate(s.dB, s.dFcap, use), rT = computeAll(s.v, dT, s.dB);
-  return { amt:amt, cap:cap, use:use, dT:dT, rT:rT };
-}
-/* ผลทดลอง: ข้อความจางในช่องบอกยอดสูงสุด และ 2 บรรทัดใต้ช่อง */
-function renderTrial(s){
-  var inp = $("trialAmt"), out = $("trialOut");
-  var cap = extraPay(s.dFcap, s.dB);
-  inp.placeholder = cap > 0.5 ? "สูงสุด " + fmt(cap) : "ใช้สิทธิ์เต็มแล้ว";
-  out.innerHTML = "";
-  var t = trialCalc(s);
-  if (!t){ out.style.display = "none"; return; }
-  out.style.display = "";
-  var tax = Math.max(0, t.rT.selfTax), down = Math.max(0, s.rB.selfTax) - tax;
-  function ln(a, v, cls){ out.appendChild(el("div", { class:"tln" }, el("span", null, a), el("b", { class:cls || "" }, v))); }
-  ln("ภาษีที่ต้องเสีย", fmt(tax) + " บาท", "owe");
-  ln("ประหยัดภาษีได้", fmt(down) + " บาท", "refund");
-}
+function renderTrial(){}
 function renderBrackets(s){
   renderTrial(s);
   var tg = $("brToggle"); tg.innerHTML = "";
@@ -1665,88 +1632,7 @@ function pickList(d0, dFull, amt){
   return out.join(", ");
 }
 $("cFromBefore").addEventListener("click", function(){ st.custom = {}; ADJ = {}; updateTab2(true); });
-tapClear($("trialAmt"));
-$("trialAmt").addEventListener("input", function(){
-  var d = digits(this.value);
-  if (!(num(d) > 0)) d = "";
-  st.trial = d; this.value = withCommas(d);
-  try { this.setSelectionRange(this.value.length, this.value.length); } catch(e){}
-  renderTrial(scenarios());
-});
-
-/* ===== v2.7 ขีดเขียนบนตารางขั้นบันได (ไม่ติดในรูป LINE) ===== */
-var DRAW = { on:false, color:"#E53935", erase:false, strokes:[], cur:null };
-var drawCv = $("brCanvas"), drawBox = $("brDraw");
-function drawSize(){
-  var dpr = window.devicePixelRatio || 1, w = drawBox.clientWidth, h = drawBox.clientHeight;
-  if (!w || !h) return;
-  var W = Math.round(w * dpr), H = Math.round(h * dpr);
-  if (drawCv.width !== W || drawCv.height !== H){ drawCv.width = W; drawCv.height = H; }
-  drawAll();
-}
-function drawAll(){
-  var ctx = drawCv.getContext("2d"), dpr = window.devicePixelRatio || 1;
-  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, drawCv.width, drawCv.height); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  DRAW.strokes.forEach(function(s){
-    var p = s.pts; if (!p.length) return;
-    ctx.strokeStyle = s.color === "hl" ? "rgba(255,213,0,.45)" : s.color;
-    ctx.lineWidth = s.color === "hl" ? 18 : 3.5;
-    ctx.lineCap = "round"; ctx.lineJoin = "round";
-    ctx.beginPath(); ctx.moveTo(p[0][0], p[0][1]);
-    if (p.length === 1) ctx.lineTo(p[0][0] + 0.1, p[0][1]);
-    for (var i = 1; i < p.length; i++) ctx.lineTo(p[i][0], p[i][1]);
-    ctx.stroke();
-  });
-}
-function drawPt(e){ var r = drawCv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
-/* ยางลบ: แตะโดนรอยไหน ลบรอยนั้นทั้งรอย */
-function segDist(p, a, b){
-  var dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy, t = L ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L : 0;
-  t = Math.max(0, Math.min(1, t)); var x = a[0] + t * dx - p[0], y = a[1] + t * dy - p[1]; return Math.sqrt(x * x + y * y);
-}
-function eraseAt(p){
-  var before = DRAW.strokes.length;
-  DRAW.strokes = DRAW.strokes.filter(function(s){
-    var tol = s.color === "hl" ? 18 : 14, q = s.pts;
-    if (q.length === 1) return segDist(p, q[0], q[0]) > tol;
-    for (var i = 1; i < q.length; i++) if (segDist(p, q[i - 1], q[i]) <= tol) return false;
-    return true;
-  });
-  if (DRAW.strokes.length !== before) drawAll();
-}
-var erasing = false;
-drawCv.addEventListener("pointerdown", function(e){
-  if (!DRAW.on) return; e.preventDefault();
-  try { drawCv.setPointerCapture(e.pointerId); } catch(x){}
-  if (DRAW.erase){ erasing = true; eraseAt(drawPt(e)); return; }
-  DRAW.cur = { color:DRAW.color, pts:[drawPt(e)] }; DRAW.strokes.push(DRAW.cur); drawAll();
-});
-drawCv.addEventListener("pointermove", function(e){
-  if (erasing){ e.preventDefault(); eraseAt(drawPt(e)); return; }
-  if (!DRAW.cur) return; e.preventDefault(); DRAW.cur.pts.push(drawPt(e)); drawAll();
-});
-function drawEnd(){ DRAW.cur = null; erasing = false; }
-drawCv.addEventListener("pointerup", drawEnd); drawCv.addEventListener("pointercancel", drawEnd);
-function drawTools(){
-  Array.prototype.forEach.call(document.querySelectorAll("#drawBar .dot"), function(b){ b.setAttribute("aria-pressed", !DRAW.erase && b.dataset.c === DRAW.color ? "true" : "false"); });
-  $("eraserBtn").setAttribute("aria-pressed", DRAW.erase ? "true" : "false");
-}
-function setPen(on){
-  DRAW.on = on; DRAW.cur = null;
-  drawBox.classList.toggle("pen", on); $("drawBar").classList.toggle("on", on);
-  $("penBtn").setAttribute("aria-pressed", on ? "true" : "false");
-  $("penBtn").textContent = on ? "✓ เลิกขีดเขียน" : "✏️ ขีดเขียน";
-  if (on) drawSize();
-}
-$("penBtn").addEventListener("click", function(){ setPen(!DRAW.on); });
-Array.prototype.forEach.call(document.querySelectorAll("#drawBar .dot"), function(b){ b.addEventListener("click", function(){ DRAW.color = b.dataset.c; DRAW.erase = false; drawTools(); }); });
-$("eraserBtn").addEventListener("click", function(){ DRAW.erase = !DRAW.erase; drawTools(); });
-$("undoBtn").addEventListener("click", function(){ DRAW.strokes.pop(); drawAll(); });
-$("clearBtn").addEventListener("click", function(){ DRAW.strokes = []; drawAll(); });
-if (window.ResizeObserver) new ResizeObserver(drawSize).observe(drawBox);
-window.addEventListener("resize", drawSize);
-drawTools();
-function resetPlay(){ DRAW.strokes = []; drawAll(); setPen(false); $("trialAmt").value = ""; $("trialOut").style.display = "none"; }
+function drawSize(){} function setPen(){} function resetPlay(){}
 
 /* ===== บันทึกรูป / ส่ง LINE ===== */
 function loadH2C(){
@@ -1823,14 +1709,27 @@ function buildShareCard(){
   card.appendChild(el("div", { class:"sf" }, "Tax for Med Pro by ป้าเป็ด CFP® v" + APP_VERSION + " · ข้อมูลภาษี ณ " + DATA_AS_OF + " · ตัวเลขเป็นการประมาณเพื่อการวางแผน"));
   return card;
 }
+function showShot(url){
+  var old = document.querySelector(".shot"); if (old) old.remove();
+  var close = el("button", { class:"btn btn-g", type:"button" }, "ปิด");
+  var dl = el("a", { class:"btn btn-p", id:"shotDl", href:url, download:"แผนภาษี.jpg" }, "ดาวน์โหลด JPEG");
+  var box = el("div", { class:"shot", role:"dialog", "aria-label":"รูปผลคำนวณ" },
+    el("p", null, "📱 มือถือ: กดค้างที่รูป แล้วเลือก \"บันทึกรูปภาพ\" / \"เพิ่มไปยังรูปภาพ\" รูปจะเก็บในอัลบั้มรูป"),
+    el("div", { class:"imgwrap" }, el("img", { src:url, alt:"สรุปการวางแผนภาษี" })),
+    el("div", { class:"row-btn" }, dl, close));
+  close.addEventListener("click", function(){ box.remove(); });
+  document.body.appendChild(box);
+}
+function shotName(name, blob){ var a = $("shotDl"); if (a){ a.setAttribute("download", name); a.href = URL.createObjectURL(blob); } $("shareMsg").textContent = "สร้างรูปแล้ว กดค้างที่รูปเพื่อบันทึกลงอัลบั้ม"; }
 $("shareBtn").addEventListener("click", function(){
   var btn = this, msg = $("shareMsg"), card;
   btn.disabled = true; btn.textContent = "กำลังสร้างรูป..."; msg.textContent = "";
   loadH2C().then(function(){ card = buildShareCard(); document.body.appendChild(card); return (document.fonts && document.fonts.ready) ? document.fonts.ready : null; })
   .then(function(){ return window.html2canvas(card, { scale:3, backgroundColor:"#ffffff", useCORS:true, logging:false }); })
-  .then(function(canvas){ card.remove(); return new Promise(function(res){ canvas.toBlob(res, "image/png"); }); })
+  .then(function(canvas){ card.remove(); var url = canvas.toDataURL("image/jpeg", 0.92); showShot(url); return new Promise(function(res){ canvas.toBlob(res, "image/jpeg", 0.92); }); })
   .then(function(blob){
-    var name = "แผนภาษี-" + (st.cust.name || "ของฉัน").replace(/[\\/:*?"<>|\s]+/g, "_") + ".png";
+    var name = "แผนภาษี-" + (st.cust.name || "ของฉัน").replace(/[\\/:*?"<>|\s]+/g, "_") + ".jpg";
+    shotName(name, blob); return;
     var file = new File([blob], name, { type:"image/png" });
     function dl(){ var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); msg.textContent = "บันทึกรูปลงเครื่องแล้ว"; }
     dl();
