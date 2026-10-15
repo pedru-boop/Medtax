@@ -109,6 +109,9 @@ body.t2 .fab{bottom:calc(env(safe-area-inset-bottom,0px) + 18px)}
 .contact p{margin:0 0 12px;color:var(--muted);font-size:15px}
 .contact .row-btn a{text-decoration:none;display:inline-block}
 .btn-tel{background:var(--ink);color:#fff}
+.cd{background:var(--gold-soft);border:1px solid #E6CF98;color:#5A4210;border-radius:10px;padding:10px 12px;font-size:15.5px;margin-bottom:12px}
+.cd b{font-size:19px}
+.ask{display:block;text-align:center;text-decoration:none;margin:0 0 14px}
 .btn-s{padding:8px 13px;font-size:15px}
 .row-btn{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
@@ -492,7 +495,7 @@ table.gu2{border-collapse:collapse;min-width:100%}
     </a>
   </div>
   <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" id="t1" aria-selected="true" aria-controls="p1">1. ข้อมูลลูกค้า</button>
+    <button class="tab" role="tab" id="t1" aria-selected="true" aria-controls="p1">1. ข้อมูลของคุณ</button>
     <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="p2">2. คำนวณและวางแผน</button>
   </nav>
 </header>
@@ -500,10 +503,10 @@ table.gu2{border-collapse:collapse;min-width:100%}
 <main>
   <section class="panel on" id="p1" role="tabpanel" aria-labelledby="t1">
     <div class="zone z-cust">
-      <div class="zone-h"><h2>ลูกค้า</h2><span>ข้อมูลพื้นฐาน</span></div>
+      <div class="zone-h"><h2>ข้อมูลของคุณ</h2><span>ข้อมูลพื้นฐาน</span></div>
       <div class="card">
         <div class="grid2">
-          <div><label class="f" for="cName">ชื่อลูกค้า</label><input class="inp" id="cName"></div>
+          <div><label class="f" for="cName">ชื่อเล่น (ไม่บังคับ)</label><input class="inp" id="cName"></div>
           <div class="grid2" style="grid-template-columns:1fr 1fr">
             <div><label class="f" for="cAge">อายุ (ปี)</label><input class="inp" id="cAge" inputmode="numeric" maxlength="3"></div>
             <div><label class="f" for="cRet">อายุเกษียณ</label><input class="inp" id="cRet" inputmode="numeric" maxlength="3"></div>
@@ -523,14 +526,16 @@ table.gu2{border-collapse:collapse;min-width:100%}
     </div>
 
     <div class="zone z-ded">
-      <div class="zone-h"><h2>ค่าลดหย่อน</h2><span>ติ๊กเฉพาะที่ลูกค้ามีอยู่ตอนนี้</span></div>
+      <div class="zone-h"><h2>ค่าลดหย่อน</h2><span>ติ๊กเฉพาะที่คุณมีอยู่ตอนนี้</span></div>
       <div class="fixed"><span>ลดหย่อนส่วนตัว (ได้ทุกคน)</span><b class="num">60,000</b></div>
       <div id="dedList"></div>
     </div>
   </section>
 
   <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2">
+    <div class="cd no-share" id="countdown" style="display:none"></div>
     <div id="summary"></div>
+    <a class="btn btn-line ask no-share" id="askBtn" href="https://line.me/R/ti/p/@422cilco" target="_blank" rel="noopener">💬 ส่งผลนี้ถามป้าเป็ดทาง LINE</a>
     <div class="row-btn" style="margin:0 0 12px">
       <button class="btn btn-p btn-s" id="shareBtn">บันทึกรูปผลคำนวณ</button>
       <button class="btn btn-g btn-s" id="cFromBefore">ล้างช่องวางแผน</button>
@@ -539,10 +544,10 @@ table.gu2{border-collapse:collapse;min-width:100%}
     <div class="ledger-wrap" id="ledgerWrap"><table class="ledger" id="ledger"></table></div>
     <details class="notes-box no-share" id="guBox" style="display:none"><summary>ดูการคำนวณภาษีที่นายจ้างออกให้</summary><div id="guBody"></div></details>
     <details class="note note-lines no-share notes-box"><summary>รายละเอียด</summary>
-      <div>• คอลัมน์ใช้สิทธิ์เต็ม เติมประกันและกองทุนเท่าที่ยังช่วยลดภาษีได้ ไม่เกินเพดานของลูกค้า (คิดจาก % ของรายได้และวงเงินกลุ่ม)</div>
+      <div>• คอลัมน์ใช้สิทธิ์เต็ม เติมประกันและกองทุนเท่าที่ยังช่วยลดภาษีได้ ไม่เกินเพดานของคุณ (คิดจาก % ของรายได้และวงเงินกลุ่ม)</div>
       <div>• ลำดับการเติม: ประกันชีวิต/สุขภาพ → บำนาญ → RMF → กอช. → Thai ESG</div>
       <div>• ตัวเลขสีเขียว (+) คือยอดที่ซื้อเพิ่มได้อีก</div>
-      <div>• คอลัมน์ตามใจลูกค้า ใส่ยอดที่จะซื้อเพิ่มในช่องว่าง ใต้ช่องมียอดแนะนำ ตรงกับคอลัมน์ใช้สิทธิ์เต็ม</div>
+      <div>• คอลัมน์ตามใจคุณ ใส่ยอดที่จะซื้อเพิ่มในช่องว่าง ใต้ช่องมียอดแนะนำ ตรงกับคอลัมน์ใช้สิทธิ์เต็ม</div>
       <div>• กลุ่มเกษียณเกิน 500,000 ระบบลดตัวอื่นให้อัตโนมัติ ลด RMF ก่อน → กอช. → บำนาญ (เก็บประกันไว้ท้ายสุด)</div>
       <div>• PVD กองทุนครู และประกันสังคม หักจากเงินเดือนแล้ว จึงไม่มีช่องให้เพิ่ม</div>
     </details>
@@ -594,7 +599,7 @@ table.gu2{border-collapse:collapse;min-width:100%}
 <a class="fab" href="https://line.me/R/ti/p/@422cilco" target="_blank" rel="noopener" aria-label="แชท LINE ป้าเป็ด">💬 LINE ป้าเป็ด</a>
 <div class="bar" id="bar">
   <div class="bar-in">
-    <div class="bar-t"><span id="barLbl">ภาษีที่ลูกค้าจ่ายเอง (ประมาณ)</span><b class="num" id="barTax">0</b></div>
+    <div class="bar-t"><span id="barLbl">ภาษีที่คุณต้องจ่าย (ประมาณ)</span><b class="num" id="barTax">0</b></div>
     <button class="btn btn-p" id="barGo">คำนวณและวางแผน</button>
   </div>
 </div>
@@ -652,7 +657,7 @@ var INCOME_ITEMS = [
       "ดูยอดรวมได้จาก<b>หนังสือรับรองการหักภาษี ณ ที่จ่าย (50 ทวิ)</b> ที่โรงพยาบาลออกให้",
       "หักค่าใช้จ่ายเหมา <b>50%</b> รวมกับ 40(2) แล้ว<b>ไม่เกิน 100,000 บาท</b>"],
       "ตัวอย่าง: พยาบาลวิชาชีพ รพ.รัฐ แพทย์ใช้ทุน แพทย์ประจำ รพ.เอกชนที่เป็นลูกจ้าง"),
-    fields:[ M("salary","เงินได้ทั้งปี (บาท)"), M("whtSalary","ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี") ] },
+    fields:[ M("salaryM","เงินเดือนต่อเดือน (บาท)"), M("shiftM","ค่าเวร OT พ.ต.ส. และค่าตอบแทนอื่น เฉลี่ยต่อเดือน (บาท)"), M("bonusY","โบนัสและเงินได้อื่นทั้งปี (บาท)"), M("whtSalary","ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี") ] },
   { id:"i2", code:"40(2)", title:"ค่าเวรนอก งาน part-time ค่าวิทยากร เบี้ยประชุม",
     def:D(["เงินได้จาก<b>งานที่รับทำให้เป็นครั้งคราว</b> โดย<b>ไม่ได้เป็นลูกจ้าง</b>ของผู้จ่าย และไม่ได้คิดเงินตามจำนวนคนไข้หรือหัตถการ",
       "<b>รับจ็อบอยู่เวร</b>ที่โรงพยาบาลหรือคลินิกอื่น (locum / เวรนอก) ที่จ่าย<b>เหมาต่อเวร ต่อชั่วโมง หรือต่อวัน</b> เช่น เวร ER เวรวอร์ด เวรพยาบาลพิเศษ",
@@ -662,7 +667,7 @@ var INCOME_ITEMS = [
       "<b>ยึดวงเล็บที่ระบุในใบ 50 ทวิ</b> เป็นหลัก",
       "หักค่าใช้จ่ายเหมา <b>50%</b> รวมกับ 40(1) แล้ว<b>ไม่เกิน 100,000 บาท</b>"],
       "ตัวอย่าง: หมอรัฐรับเวร ER ที่ รพ.เอกชน เวรละ 8,000 บาท · พยาบาลรับเวรพิเศษที่คลินิกเวรละ 1,500 บาท · ค่าวิทยากรบรรยายวิชาการ"),
-    fields:[ M("commission","เงินได้ทั้งปี (บาท)"), M("whtComm","ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี") ] },
+    fields:[ S("commUnit","กรอกเป็น",[["m","เฉลี่ยต่อเดือน (คูณ 12 ให้)"],["y","ยอดทั้งปี"]]), M("commIn","เงินได้ (บาท)"), M("whtComm","ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี") ] },
   { id:"i6", code:"40(6)", title:"ค่ามือ (DF) และรายได้คลินิก",
     def:D(["เงินได้จาก<b>วิชาชีพอิสระด้านการประกอบโรคศิลปะ</b> เช่น แพทย์ ทันตแพทย์ เภสัชกร พยาบาล กายภาพบำบัด ที่ทำงานแบบอิสระ ไม่ใช่ลูกจ้าง",
       "<b>ค่ามือ (DF)</b> ที่คิดตามจำนวนคนไข้หรือหัตถการ ซึ่งโรงพยาบาลเก็บจากคนไข้แล้วจ่ายต่อให้ และรายได้จาก<b>คลินิกส่วนตัว</b>",
@@ -670,7 +675,7 @@ var INCOME_ITEMS = [
       "หักค่าใช้จ่ายเหมา <b>60%</b> หรือเลือกหักตามจริงพร้อมหลักฐาน",
       "ถ้าเป็นลูกจ้างโรงพยาบาลหรือบริษัท รายได้จะเป็น 40(1) ไม่ใช่ 40(6) ให้<b>ยึดวงเล็บที่ระบุในใบ 50 ทวิ</b>"],
       "ตัวอย่าง: หมอรัฐที่ไป part-time รับ DF ที่ รพ.เอกชน หมอเปิดคลินิกตอนเย็น"),
-    fields:[ M("prof","เงินได้ทั้งปี (บาท)"),
+    fields:[ S("profUnit","กรอกเป็น",[["m","เฉลี่ยต่อเดือน (คูณ 12 ให้)"],["y","ยอดทั้งปี"]]), M("profIn","เงินได้ (บาท)"),
       S("profType","วิธีหักค่าใช้จ่าย",[["medical","หักเหมา 60%"],["actual","หักตามจริง"]]),
       M("profActual","ค่าใช้จ่ายจริง (บาท)", function(v){ return v.profType === "actual"; }),
       M("whtProf","ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี") ] }
@@ -763,7 +768,7 @@ var DED_ITEMS = [
   { g:"retire", id:"nsf", title:"กอช. (กองทุนการออมแห่งชาติ)", plan:true,
     def:D(["ตามที่จ่ายจริง <b>ไม่เกิน 30,000 บาท</b> นับรวมกลุ่มเกษียณไม่เกิน 500,000",
       "สมัครได้เฉพาะผู้ที่<b>ไม่ได้อยู่ในประกันสังคมมาตรา 33/39</b> ไม่อยู่ในกองทุนสำรองเลี้ยงชีพหรือระบบบำนาญข้าราชการ (อายุ 15–60 ปี)",
-      "แอปจะเติม กอช. ในคอลัมน์ใช้สิทธิ์เต็มเฉพาะลูกค้าที่ไม่มีประกันสังคมและไม่มี PVD"]),
+      "แอปจะเติม กอช. ในคอลัมน์ใช้สิทธิ์เต็มเฉพาะกรณีที่ไม่มีประกันสังคมและไม่มี PVD"]),
     fields:[ M("nsf","เงินสะสมทั้งปี (บาท)") ] },
   { g:"retire", id:"teacher", title:"กองทุนสงเคราะห์ครูโรงเรียนเอกชน",
     def:D(["เงินสะสม <b>15% ของค่าจ้าง ไม่เกิน 500,000 บาท</b> นับรวมกลุ่มเกษียณไม่เกิน 500,000"]),
@@ -821,7 +826,7 @@ var FIELD_HINT = { life:"สูงสุด 100,000 (รวมกับประ
 var WHT_OF = { whtGift:["gift"], whtSalary:["salary","commission"], whtComm:["commission"], whtRoyalty:["royalty"], whtRent:["rent"], whtProf:["prof"], whtCon:["con"], whtBiz:["biz"] };
 
 /* ===== State ===== */
-var DEFAULT_V = { empTaxMode:"none", benTaxMode:"none", giftType:"actual", interestMode:"final", dividendMode:"final", corpRate:"20", rentType:"building", profType:"medical", conType:"flat", bizType:"general" };
+var DEFAULT_V = { empTaxMode:"none", benTaxMode:"none", giftType:"actual", interestMode:"final", dividendMode:"final", corpRate:"20", rentType:"building", profType:"medical", commUnit:"m", profUnit:"m", conType:"flat", bizType:"general" };
 var DEFAULT_D = { socialMode:"full", socialSec:"33", pvdType:"pvd" };
 function freshState(){ return { v:Object.assign({}, DEFAULT_V), d:Object.assign({}, DEFAULT_D), sel:{}, cust:{ name:"", age:"", ret:"60", dis:false, old:false }, custom:{}, roiRate:"3", brView:"B", trial:"" }; }
 var st = freshState();
@@ -830,8 +835,8 @@ var st = freshState();
 function lockMsg(id){
   var s = st.sel;
   if (id === "nsf"){
-    if (s.social && !/^40/.test(st.d.socialSec || "33")) return "ใช้ไม่ได้ เพราะลูกค้าอยู่ประกันสังคม ม.33/39 (ม.40 สมัคร กอช. ได้)";
-    if (s.pvd || s.teacher) return "ใช้ไม่ได้ เพราะลูกค้ามีกองทุนสำรองเลี้ยงชีพหรือกองทุนครูอยู่แล้ว";
+    if (s.social && !/^40/.test(st.d.socialSec || "33")) return "ใช้ไม่ได้ เพราะคุณอยู่ประกันสังคม ม.33/39 (ม.40 สมัคร กอช. ได้)";
+    if (s.pvd || s.teacher) return "ใช้ไม่ได้ เพราะคุณมีกองทุนสำรองเลี้ยงชีพหรือกองทุนครูอยู่แล้ว";
   }
   if (id === "spouseLife" && !s.spouse) return "ต้องติ๊ก \"คู่สมรสไม่มีเงินได้\" ในหมวดครอบครัวก่อน";
   if ((id === "pvd" || id === "teacher") && !s.i1) return "ต้องมีเงินได้ 40(1) เงินเดือน ก่อน";
@@ -949,8 +954,17 @@ function computeAll(v, d, empD){
   var r = compute(v, d, g1 + g2); r.gU1 = g1; r.gU2 = g2; r.empPaid = g1 + g2; r.steps = steps; r.empModes = [m1, m2]; r.selfTax = r.taxAfterCredit - r.empPaid; return r;
 }
 
+/* แปลงยอดรายเดือนเป็นทั้งปี */
+function derive(){
+  var x = st.v;
+  x.salary = String(num(x.salaryM) * 12 + num(x.shiftM) * 12 + num(x.bonusY));
+  x.commission = String(num(x.commIn) * (x.commUnit === "y" ? 1 : 12));
+  x.prof = String(num(x.profIn) * (x.profUnit === "y" ? 1 : 12));
+}
 function effV(){
+  derive();
   var v = Object.assign({}, st.v);
+  if (!st.sel.i1) v.salary = 0; if (!st.sel.i2) v.commission = 0; if (!st.sel.i6) v.prof = 0;
   INCOME_ITEMS.forEach(function(it){ if (!st.sel[it.id]) it.fields.forEach(function(f){ if (f.t === "money") v[f.k] = 0; }); });
   return v;
 }
@@ -1041,7 +1055,7 @@ function othersScenario(k, s){
   Object.keys(BUY).forEach(function(x){ if (x !== k && buyEligible(x, s)) dX[x] = num(s.dB[x]) + num(st.custom[x]); });
   return { dX:dX, rX:computeAll(s.v, dX, s.dB) };
 }
-/* ยอดสูงสุดที่ลูกค้าใส่ได้ในแถวนี้ (กลุ่มเกษียณจะลดตัวอื่นแทน) */
+/* ยอดสูงสุดที่คุณใส่ได้ในแถวนี้ (กลุ่มเกษียณจะลดตัวอื่นแทน) */
 function ownMax(k, s){
   if (!BUY[k] || !buyEligible(k, s)) return 0;
   var o = othersScenario(k, s), r = o.rX, U = r.U, G = r.groups, base = num(s.dB[k]), x = 0;
@@ -1078,7 +1092,7 @@ function normalizeCustom(k){
     else { st.custom[k] = String(Math.max(0, num(st.custom[k]) - Math.ceil(over))); ADJ[k] = "group"; }
   }
 }
-/* ใช้สิทธิ์เต็ม: เติมตามลำดับเท่าที่ยังลดภาษีได้ ไม่เกินเพดานของลูกค้า */
+/* ใช้สิทธิ์เต็ม: เติมตามลำดับเท่าที่ยังลดภาษีได้ ไม่เกินเพดานของคุณ */
 function fullPlan(v, dB, rB, cap){
   var total = extraPay(cap, dB), amt = Math.max(0, rB.net - floorNet(rB));
   if (amt <= 0.5) return Object.assign({}, dB);
@@ -1193,7 +1207,7 @@ $("cRet").addEventListener("input", function(){ this.value = digits(this.value);
 $("cDis").addEventListener("change", function(){ st.cust.dis = this.checked; onData(); });
 $("cOld").addEventListener("change", function(){ st.cust.old = this.checked; onData(); });
 
-/* เพดานของลูกค้ารายนี้ (คิดจากรายได้และสิทธิ์ที่ใช้ไปแล้ว) */
+/* เพดานของคุณรายนี้ (คิดจากรายได้และสิทธิ์ที่ใช้ไปแล้ว) */
 function capHint(k, r){
   if (!(r.gross > 0)) return FIELD_HINT[k] || "";
   var U = r.U, G = r.groups, ret = function(own){ return Math.max(0, 500000 - (G.retire.used - own)); }, x = null;
@@ -1207,7 +1221,7 @@ function capHint(k, r){
   else if (k === "tesg") x = r.caps.esg - U.tesgx;
   else if (k === "tesgx") x = r.caps.esg - U.tesg;
   if (x === null) return FIELD_HINT[k] || "";
-  return "ลูกค้ารายนี้ใส่ได้สูงสุด " + fmt(Math.max(0, Math.floor(x))) + " บาท";
+  return "คุณใส่ได้สูงสุด " + fmt(Math.max(0, Math.floor(x))) + " บาท";
 }
 function setHint(k, text, bad){ var h = $("h_" + k); if (!h) return; h.textContent = text; h.classList.toggle("bad", !!bad); }
 function onData(){
@@ -1223,7 +1237,7 @@ function onData(){
   });
   var v = effV(), d = effD(), r = computeAll(v, d);
   var bt = r.wht > 0 ? r.payable : r.selfTax;
-  $("barLbl").textContent = bt < -0.5 ? "เงินคืนภาษี (ประมาณ)" : (r.wht > 0 ? "ภาษีที่ต้องจ่ายเพิ่ม (ประมาณ)" : "ภาษีที่ลูกค้าจ่ายเอง (ประมาณ)");
+  $("barLbl").textContent = bt < -0.5 ? "เงินคืนภาษี (ประมาณ)" : (r.wht > 0 ? "ภาษีที่ต้องจ่ายเพิ่ม (ประมาณ)" : "ภาษีที่คุณต้องจ่าย (ประมาณ)");
   $("barTax").textContent = fmt(Math.abs(bt)) + " บาท"; $("barTax").className = "num " + (bt < -0.5 ? "refund" : (bt > 0.5 ? "owe" : ""));
   ["life","retire","esg"].forEach(function(k){
     var m = $("m_" + k); if (!m) return; var g = r.groups[k], full = g.max > 0 && g.used >= g.max - 0.5;
@@ -1253,6 +1267,9 @@ function onData(){
     else setHint(f.k, "");
   } }); });
   /* แนะนำ ดอกเบี้ย / ปันผล */
+  setHint("bonusY", num(st.v.salary) > 0 ? "รวมเงินได้ 40(1) ทั้งปี " + fmt(num(st.v.salary)) + " บาท" : "");
+  setHint("commIn", num(st.v.commIn) > 0 ? "รวมทั้งปี " + fmt(num(st.v.commission)) + " บาท" : "");
+  setHint("profIn", num(st.v.profIn) > 0 ? "รวมทั้งปี " + fmt(num(st.v.prof)) + " บาท" : "");
   recommend("i4a", "interest", "interestMode", { final:"ไม่นำมารวม (หัก 15% แล้วจบ)", include:"นำมารวมคำนวณ" }, v, d, r);
   recommend("i4b", "dividend", "dividendMode", { final:"ไม่นำมารวม (หัก 10% แล้วจบ)", credit:"นำมารวม ขอเครดิตภาษี" }, v, d, r);
 }
@@ -1282,7 +1299,7 @@ var CELLS = [];
 function renderTab2(){
   var tbl = $("ledger"); tbl.innerHTML = ""; CELLS = [];
   tbl.appendChild(el("thead", null, el("tr", null, el("th", { scope:"col" }, "รายการ"), el("th", { scope:"col" }, "ปัจจุบัน"),
-    el("th", { scope:"col" }, "ใช้สิทธิ์เต็มตามเพดานของลูกค้า"), el("th", { scope:"col", class:"c3" }, "วางแผนตามใจลูกค้า"))));
+    el("th", { scope:"col" }, "ใช้สิทธิ์เต็มตามเพดานของคุณ"), el("th", { scope:"col", class:"c3" }, "วางแผนตามใจคุณ"))));
   var tb = el("tbody"); tbl.appendChild(tb);
   function head(t, cls){ tb.appendChild(el("tr", { class:cls }, el("td", { colspan:"4" }, t))); }
   function spacer(){ tb.appendChild(el("tr", { class:"sp" }, el("td", { colspan:"4" }))); }
@@ -1385,7 +1402,7 @@ function renderTab2(){
   row("คิดเป็น % ของเงินได้รวม", null, function(r){ return r.gross > 0 ? Math.max(0, r.taxAfterCredit) / r.gross * 100 : 0; }, { pct2:true });
   if (GU){
     row("นายจ้างออกให้", null, function(r){ return r.empPaid; }, { minus:true });
-    row("ลูกค้าจ่ายเอง", null, function(r){ return r.selfTax; }, { cls:"big", signed:true });
+    row("คุณจ่ายเอง", null, function(r){ return r.selfTax; }, { cls:"big", signed:true });
   }
   if (S0.rB.wht > 0){
     row("หักภาษี ณ ที่จ่ายแล้ว", null, function(r){ return r.wht; }, { minus:true });
@@ -1445,7 +1462,23 @@ function updateTab2(initial){
       if (c.opts.m2){ var R = col[1]; var why = R.nonSal < 120000 ? "เงินได้ไม่ถึง 120,000 ไม่ต้องคิด" : (R.minExempt ? "ไม่เกิน 5,000 ได้รับยกเว้น" : ""); if (why) td.appendChild(el("span", { class:"cap hint2" }, why)); }
     });
   });
-  renderSummary(s); renderRoi(s); renderBrackets(s); renderGU(s);
+  renderSummary(s); renderRoi(s); renderBrackets(s); renderGU(s); renderAsk(s);
+}
+function daysLeft(){ var end = new Date("2026-12-31T23:59:59+07:00").getTime(); return Math.ceil((end - Date.now()) / 86400000); }
+function renderCountdown(){
+  var b = $("countdown"), n = daysLeft();
+  if (n <= 0){ b.style.display = "none"; return; }
+  b.style.display = ""; b.innerHTML = "⏳ เหลืออีก <b>" + n + " วัน</b> ถึง 31 ธ.ค. 2569 ซื้อประกันหรือกองทุนลดหย่อนให้ทันปีภาษีนี้";
+}
+function renderAsk(s){
+  var t = s.rB.wht > 0 ? s.rB.payable : s.rB.selfTax, save = Math.max(0, s.rB.taxAfterCredit - s.rF.taxAfterCredit);
+  var lines = ["สวัสดีป้าเป็ด ลองคำนวณในแอป Tax for Med Pro แล้ว"];
+  lines.push("รายได้ทั้งปีประมาณ " + fmt(s.rB.gross) + " บาท");
+  lines.push(t < -0.5 ? "ได้เงินคืนภาษีประมาณ " + fmt(-t) + " บาท" : (s.rB.wht > 0 ? "ต้องจ่ายภาษีเพิ่มประมาณ " : "ภาษีทั้งปีประมาณ ") + fmt(t) + " บาท");
+  if (save > 0.5) lines.push("ถ้าใช้สิทธิ์ลดหย่อนเต็ม ประหยัดได้ประมาณ " + fmt(save) + " บาท");
+  lines.push("อยากปรึกษาเรื่องการลดหย่อนภาษี");
+  $("askBtn").href = "https://line.me/R/oaMessage/@422cilco/?" + encodeURIComponent(lines.join("\n"));
+  renderCountdown();
 }
 function renderGU(s){
   var box = $("guBox"), body = $("guBody");
@@ -1461,7 +1494,7 @@ function renderGU(s){
     ["เงินเดือน ค่าจ้าง โบนัส", function(x){ return sal; }, sal > 0],
     ["ผลประโยชน์ที่นายจ้างออกให้", function(x){ return ben; }, ben > 0],
     ["+ ภาษีที่นายจ้างออกให้ (นับเป็นเงินได้)", function(x){ return x.g; }, true],
-    ["เงินได้อื่นของลูกค้า (ค่าคอม ฯลฯ)", function(x){ return 0; }, s.rB.gross - sal - ben - s.rB.empPaid > 0.5],
+    ["เงินได้อื่นของคุณ (ค่าคอม ฯลฯ)", function(x){ return 0; }, s.rB.gross - sal - ben - s.rB.empPaid > 0.5],
     ["รวมเงินได้จากนายจ้าง", function(x){ return x.r.gross; }, true, "t"],
     ["ยกเว้น 65+ / คนพิการ", function(x){ return -x.r.exempt; }, s.rB.exempt > 0],
     ["หักค่าใช้จ่าย 50% ไม่เกิน 100,000", function(x){ return -x.r.exps.i12; }, true],
@@ -1476,7 +1509,7 @@ function renderGU(s){
   t.appendChild(el("thead", null, hr));
   var tb = el("tbody"); t.appendChild(tb);
   var R = s.rB;
-  var FIN = { "เงินเดือน ค่าจ้าง โบนัส":sal, "ผลประโยชน์ที่นายจ้างออกให้":ben, "+ ภาษีที่นายจ้างออกให้ (นับเป็นเงินได้)":R.empPaid, "เงินได้อื่นของลูกค้า (ค่าคอม ฯลฯ)":R.gross - sal - ben - R.empPaid,
+  var FIN = { "เงินเดือน ค่าจ้าง โบนัส":sal, "ผลประโยชน์ที่นายจ้างออกให้":ben, "+ ภาษีที่นายจ้างออกให้ (นับเป็นเงินได้)":R.empPaid, "เงินได้อื่นของคุณ (ค่าคอม ฯลฯ)":R.gross - sal - ben - R.empPaid,
     "รวมเงินได้จากนายจ้าง":R.gross, "ยกเว้น 65+ / คนพิการ":-R.exempt, "หักค่าใช้จ่าย 50% ไม่เกิน 100,000":-R.expense, "หักค่าลดหย่อน":-R.totalDed,
     "เงินได้สุทธิ":R.net, "ภาษีที่คำนวณได้":R.taxAfterCredit, "นายจ้างออกให้":R.empPaid };
   LINES.forEach(function(l){
@@ -1485,10 +1518,10 @@ function renderGU(s){
     var fv = FIN[l[0]]; tr.appendChild(el("td", { class:"fin" }, fv < -0.5 ? "−" + fmt(-fv) : fmt(fv)));
     tb.appendChild(tr);
   });
-  var self = el("tr", { class:"self" }, el("td", null, "ลูกค้าจ่ายเอง"));
+  var self = el("tr", { class:"self" }, el("td", null, "คุณจ่ายเอง"));
   cols.forEach(function(){ self.appendChild(el("td", null, "")); });
   self.appendChild(el("td", { class:"fin" }, fmt(Math.max(0, R.selfTax)))); tb.appendChild(self);
-  body.appendChild(el("div", { class:"hint", style:"margin:4px 0 8px" }, every ? "ทุกทอด: ภาษีที่นายจ้างออกให้ในทอดก่อน นับเป็นเงินได้ของทอดถัดไป คิดซ้ำจนภาษีไม่เปลี่ยน · เลื่อนตารางไปทางขวาเพื่อดูทอดถัดไป" : "ครั้งเดียว: นายจ้างออกภาษีทอดแรกให้ ภาษีที่เพิ่มขึ้นในทอดที่ 2 ลูกค้าจ่ายเอง"));
+  body.appendChild(el("div", { class:"hint", style:"margin:4px 0 8px" }, every ? "ทุกทอด: ภาษีที่นายจ้างออกให้ในทอดก่อน นับเป็นเงินได้ของทอดถัดไป คิดซ้ำจนภาษีไม่เปลี่ยน · เลื่อนตารางไปทางขวาเพื่อดูทอดถัดไป" : "ครั้งเดียว: นายจ้างออกภาษีทอดแรกให้ ภาษีที่เพิ่มขึ้นในทอดที่ 2 คุณจ่ายเอง"));
   body.appendChild(el("div", { class:"gu2-wrap" }, t));
 }
 function renderSummary(s){
@@ -1506,7 +1539,7 @@ function renderSummary(s){
     if (GU) L.push(["ภาษีรวม", fmt(r.taxAfterCredit)], ["นายจ้างออกให้", fmt(r.empPaid)]);
     var t = r.wht > 0 ? r.payable : r.selfTax;
     if (t < -0.5) L.push(["เงินคืนภาษี", fmt(-t), "tx refund"]);
-    else L.push([r.wht > 0 ? "ภาษีที่ต้องจ่ายเพิ่ม" : (GU ? "ลูกค้าจ่ายเอง" : "ภาษีที่ต้องเสีย"), fmt(t), "tx owe"]);
+    else L.push([r.wht > 0 ? "ภาษีที่ต้องจ่ายเพิ่ม" : (GU ? "คุณจ่ายเอง" : "ภาษีที่ต้องเสีย"), fmt(t), "tx owe"]);
     return L;
   }
   function planLines(r, ex){
@@ -1517,14 +1550,14 @@ function renderSummary(s){
   }
   box.appendChild(el("div", { class:"sumgrid" },
     card("b", "ก่อนวางแผน", taxLines(s.rB).concat([["ฐานภาษีขั้นสูงสุด", s.rB.rate + "%"], ["เงินได้สุทธิ", fmt(s.rB.net)]])),
-    card("f", "ใช้สิทธิ์เต็มตามเพดานของลูกค้า", planLines(s.rF, exF)),
-    card("c", "ตามใจลูกค้า", planLines(s.rC, exC))));
+    card("f", "ใช้สิทธิ์เต็มตามเพดานของคุณ", planLines(s.rF, exF)),
+    card("c", "ตามใจคุณ", planLines(s.rC, exC))));
   var fl = floorNet(s.rF);
   if (s.rF.net < fl - 0.5 && exF > 0){
     var w = el("div", { class:"warn" }, el("div", null, "⚠ ใช้สิทธิ์เต็มแล้ว เงินได้สุทธิเหลือ " + fmt(s.rF.net) + " บาท"));
     if (s.rF.taxMin > 0 && fl > 150000) w.appendChild(el("div", null, "ภาษีวิธีที่ 2 (0.5%) = " + fmt(s.rF.taxMin) + " บาท สูงกว่าวิธีที่ 1 แล้ว ลดหย่อนต่อไม่ช่วย"));
     else w.appendChild(el("div", null, "ต่ำกว่า 150,000 บาท ซึ่งไม่ต้องเสียภาษีอยู่แล้ว"));
-    w.appendChild(el("div", null, "ลดหย่อนเกินจุดคุ้มประมาณ " + fmt(fl - s.rF.net) + " บาท ลดยอดในคอลัมน์ตามใจลูกค้าได้"));
+    w.appendChild(el("div", null, "ลดหย่อนเกินจุดคุ้มประมาณ " + fmt(fl - s.rF.net) + " บาท ลดยอดในคอลัมน์ตามใจคุณได้"));
     box.appendChild(w);
   }
 }
@@ -1547,11 +1580,11 @@ function renderRoi(s){
 function fillRoi(s){
   var cols = $("roiCols"); if (!cols) return; cols.innerHTML = "";
   var age = num(st.cust.age), ret = num(st.cust.ret), r = num(st.roiRate) / 100, n = Math.max(0, ret - age);
-  [["ใช้สิทธิ์เต็ม", s.rF, s.dF, ""], ["ตามใจลูกค้า", s.rC, s.dC, " c"]].forEach(function(x){
+  [["ใช้สิทธิ์เต็ม", s.rF, s.dF, ""], ["ตามใจคุณ", s.rC, s.dC, " c"]].forEach(function(x){
     var ex = extraPay(x[2], s.dB), save = Math.max(0, s.rB.taxAfterCredit - x[1].taxAfterCredit);
     var b = el("div", { class:"blk" + x[3] }, el("h4", null, x[0]));
     function ln(a, v, cls){ b.appendChild(el("div", { class:"ln" }, el("span", null, a), el("b", { class:cls || "" }, v))); }
-    if (ex <= 0.5){ b.appendChild(el("div", { class:"empty" }, x[3] ? "ยังไม่ได้ใส่ยอดวางแผนในตาราง" : "ลูกค้าใช้สิทธิ์ประกันและกองทุนเต็มแล้ว")); cols.appendChild(b); return; }
+    if (ex <= 0.5){ b.appendChild(el("div", { class:"empty" }, x[3] ? "ยังไม่ได้ใส่ยอดวางแผนในตาราง" : "คุณใช้สิทธิ์ประกันและกองทุนเต็มแล้ว")); cols.appendChild(b); return; }
     ln("ใช้เงินเพิ่มค่าลดหย่อน", fmt(ex) + " บาท");
     ln("ประหยัดภาษีได้", fmt(save) + " บาท", "big");
     ln("คิดเป็น", (save / ex * 100).toFixed(1) + "% ของเงินที่ใช้");
@@ -1588,7 +1621,7 @@ function renderTrial(s){
 function renderBrackets(s){
   renderTrial(s);
   var tg = $("brToggle"); tg.innerHTML = "";
-  [["B","ปัจจุบัน"],["F","ใช้สิทธิ์เต็ม"],["C","ตามใจลูกค้า"]].forEach(function(x){
+  [["B","ปัจจุบัน"],["F","ใช้สิทธิ์เต็ม"],["C","ตามใจคุณ"]].forEach(function(x){
     tg.appendChild(el("button", { type:"button", "aria-pressed":st.brView === x[0] ? "true" : "false", onclick:function(){ st.brView = x[0]; renderBrackets(scenarios()); } }, x[1]));
   });
   var r = st.brView === "F" ? s.rF : st.brView === "C" ? s.rC : s.rB, net = r.net, ti = topIdx(net);
@@ -1778,7 +1811,7 @@ function buildShareCard(){
         planner.phone ? el("div", { class:"sp-c" }, "โทร " + planner.phone) : null,
         planner.line ? el("div", { class:"sp-c" }, "LINE ID: " + planner.line) : null)),
     el("div", { class:"scust" }, el("h2", null, "สรุปการวางแผนภาษี ปี 2569"),
-      el("div", null, "ลูกค้า: " + (st.cust.name || "-") + (st.cust.age ? "  อายุ " + st.cust.age + " ปี" : "")),
+      el("div", null, "ชื่อ: " + (st.cust.name || "-") + (st.cust.age ? "  อายุ " + st.cust.age + " ปี" : "")),
       el("div", null, "วันที่ " + today))));
   card.appendChild(cloneClean($("summary")));
   card.appendChild(pruneEmpty(cloneClean($("ledgerWrap"))));
@@ -1797,7 +1830,7 @@ $("shareBtn").addEventListener("click", function(){
   .then(function(){ return window.html2canvas(card, { scale:3, backgroundColor:"#ffffff", useCORS:true, logging:false }); })
   .then(function(canvas){ card.remove(); return new Promise(function(res){ canvas.toBlob(res, "image/png"); }); })
   .then(function(blob){
-    var name = "แผนภาษี-" + (st.cust.name || "ลูกค้า").replace(/[\\/:*?"<>|\s]+/g, "_") + ".png";
+    var name = "แผนภาษี-" + (st.cust.name || "ของฉัน").replace(/[\\/:*?"<>|\s]+/g, "_") + ".png";
     var file = new File([blob], name, { type:"image/png" });
     function dl(){ var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); msg.textContent = "บันทึกรูปลงเครื่องแล้ว"; }
     dl();
